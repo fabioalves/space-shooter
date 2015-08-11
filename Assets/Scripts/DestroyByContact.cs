@@ -27,13 +27,14 @@ public class DestroyByContact : MonoBehaviour {
         if (!other.tag.Equals("Boundary"))
         {
             Destroy(other.gameObject);
-            Destroy(gameObject);
+            Destroy(this.gameObject);
             Instantiate(explosion, transform.position, transform.rotation);
             this.gameController.AddScore(scoreValue);
 
             if (other.tag.Equals("Player"))
             {
-                Instantiate(playerExplosion, other.transform.position, other.transform.rotation);                
+                Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
+                this.gameController.GameOver();
             }            
         }
     }

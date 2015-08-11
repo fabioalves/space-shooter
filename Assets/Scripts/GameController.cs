@@ -4,11 +4,18 @@ using System.Collections;
 public class GameController : MonoBehaviour {
     public GameObject hazard;
     public Vector3 spawnValues;
+
     public float hazardCount;
     public float spawnWait;
     public float hazardWait;
+
     public GUIText scoreText;
-    private int score;    
+    public GUIText restartText;
+    public GUIText gameOverText;
+
+    private int score;
+    private bool gameOver;
+    private bool restart;
 
     void Start()
     {
@@ -16,6 +23,21 @@ public class GameController : MonoBehaviour {
         StartCoroutine(SpawnWaves());
         score = 0;
         this.UpdateScore();
+        this.gameOver = false;
+        this.restart = false;
+        this.restartText.text = "";
+        this.gameOverText.text = "";
+    }
+
+    void Update()
+    {
+        if(restart)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Application.LoadLevel(Application.loadedLevel);
+            }
+        }
     }
 
     IEnumerator SpawnWaves()
@@ -30,6 +52,13 @@ public class GameController : MonoBehaviour {
                 yield return new WaitForSeconds(hazardWait);
             }
             yield return new WaitForSeconds(spawnWait);
+
+            if(gameOver)
+            {
+                this.restartText.text = "Aperte 'R' para reiniciar";
+                this.restart = true;
+                break;
+            }
         }        
     }
     public void AddScore(int scoreValue)
@@ -40,6 +69,14 @@ public class GameController : MonoBehaviour {
 
     void UpdateScore()
     {
-        scoreText.text = "Score: " + score;
+        this.scoreText.text = "Score: " + score;
+    }
+
+    public void GameOver()
+    {
+        this.gameOverText.text = "Game Over";
+        this.gameOver = true;
+
+
     }
 }
