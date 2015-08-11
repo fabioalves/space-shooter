@@ -12,10 +12,12 @@ public class GameController : MonoBehaviour {
     public GUIText scoreText;
     public GUIText restartText;
     public GUIText gameOverText;
+    
 
     private int score;
     private bool gameOver;
     private bool restart;
+    
 
     void Start()
     {
@@ -36,7 +38,10 @@ public class GameController : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.R))
             {
                 Application.LoadLevel(Application.loadedLevel);
+                Debug.Log("Level: "+Application.loadedLevelName);
             }
+
+            
         }
     }
 
