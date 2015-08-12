@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
     public float hazardCount;
     public float spawnWait;
     public float hazardWait;
+    public float hazardSpeed;
 
     public GUIText scoreText;
     public GUIText restartText;
@@ -16,7 +17,7 @@ public class GameController : MonoBehaviour {
 
     private int score;
     private bool gameOver;
-    private bool restart;
+    private bool restart;   
     
 
     void Start()
@@ -39,9 +40,7 @@ public class GameController : MonoBehaviour {
             {
                 Application.LoadLevel(Application.loadedLevel);
                 Debug.Log("Level: "+Application.loadedLevelName);
-            }
-
-            
+            }            
         }
     }
 
@@ -53,6 +52,10 @@ public class GameController : MonoBehaviour {
             {
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
+
+                Mover mover = hazard.GetComponent<Mover>();
+                mover.speed = hazardSpeed;
+
                 Instantiate(hazard, spawnPosition, spawnRotation);
                 yield return new WaitForSeconds(hazardWait);
             }
