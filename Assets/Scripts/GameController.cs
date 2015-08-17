@@ -84,7 +84,15 @@ public class GameController : MonoBehaviour {
     {
         this.gameOverText.text = "Game Over";
         this.gameOver = true;
+    }
 
+    public int GetScore()
+    {
+        return this.score;
+    }
 
+    public void SetRestart(bool value)
+    {
+        this.restart = value;
     }
 }
