@@ -7,6 +7,8 @@ public class LevelController : MonoBehaviour {
     public string nextLevelName;
     public int nextLevelNeededPoints;
 
+    public Animation winLevelAnimation;
+
     void Start()
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
@@ -19,6 +21,7 @@ public class LevelController : MonoBehaviour {
         {
             Debug.Log("Não encontrado o script GameController");
         }
+        
     }
 
 
@@ -32,13 +35,29 @@ public class LevelController : MonoBehaviour {
         {
             Application.LoadLevel(nextLevelName);
         }
+
+        if (Input.GetKeyDown(KeyCode.U)) {
+            Debug.Log("Animação");
+            
+        }
+
     }
 
     IEnumerator LoadNewScene()
     {
         this.gameController.restartText.text = "Proxima Fase";
-        loadLevel = true;
+
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        PlayerController pcontroller = playerObject.GetComponent<PlayerController>();
+        pcontroller.YPosition(3.0f);
+        winLevelAnimation = playerObject.GetComponent<Animation>();
+        winLevelAnimation.Play("winlevel", PlayMode.StopAll);
+
+        
         yield return new WaitForSeconds(2);
 
+        this.loadLevel = true;
     }
+
+
 }

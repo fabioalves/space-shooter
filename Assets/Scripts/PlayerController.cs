@@ -14,6 +14,13 @@ public class PlayerController : MonoBehaviour
     private float nextFire = 0.0f;
     private AudioSource audioSource;
 
+    private float yPosition = 0.0f;
+
+    public void YPosition(float position)
+    {
+        this.yPosition = position;
+    }
+
     Rigidbody rbody;
     void Start()
     {
@@ -37,16 +44,16 @@ public class PlayerController : MonoBehaviour
         
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        Vector3 movement = new Vector3(moveHorizontal, yPosition, moveVertical);
         rbody.velocity = movement * speed;
 
         rbody.position = new Vector3(
             Mathf.Clamp(rbody.position.x, boundary.xMin, boundary.xMax),
-            0.0f,
+            yPosition,
             Mathf.Clamp(rbody.position.z, boundary.zMin, boundary.zMax)
             );
 
-        rbody.rotation = Quaternion.Euler(rbody.velocity.z * frontTilt, 0.0f, rbody.velocity.x * -tilt);
+        rbody.rotation = Quaternion.Euler(rbody.velocity.z * frontTilt, yPosition, rbody.velocity.x * -tilt);
         
     }
 }
