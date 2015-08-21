@@ -14,29 +14,41 @@ public class GameController : MonoBehaviour {
     public GUIText restartText;
     public GUIText gameOverText;
     public int pointsForNextLevel;
-    public string nextLevelName;
+    private string nextLevelName;
     
     private int score;
     private bool gameOver;
     private bool restart;
     private bool showAnimation = true;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this.scoreText);
+        DontDestroyOnLoad(this.restartText);
+        DontDestroyOnLoad(this.gameOverText);
+    }
 
     void Start()
     {
-        Cursor.visible = false;
+        this.scoreText = GameObject.Find("Score Text").GetComponent<GUIText>();
+        this.restartText = GameObject.Find("Restart Text").GetComponent<GUIText>();
+        this.gameOverText = GameObject.Find("Game Over Text").GetComponent<GUIText>();
+
+        
+        
+
         StartCoroutine(SpawnWaves());
         score = 0;
         this.UpdateScore();
         this.gameOver = false;
         this.restart = false;
         this.restartText.text = "";
-        this.gameOverText.text = "";
-        
+        this.gameOverText.text = "";        
     }
 
     void Update()
-    {
+    {        
         if(restart)
         {
             if (Input.GetKeyDown(KeyCode.R))
@@ -45,16 +57,18 @@ public class GameController : MonoBehaviour {
                 Debug.Log("Level: "+Application.loadedLevelName);
             }            
         }
-
-        if (this.GetScore() >= pointsForNextLevel && showAnimation == true)
+        Debug.Log("Level:" + Application.loadedLevelName);
+        if (this.GetScore() >= pointsForNextLevel)
         {
             LoadNewScene();
-            showAnimation = false;            
         }
-
     }
 
     void LoadNewScene() {
+        this.nextLevelName = GameObject.Find("Parameters").GetComponent<Parameters>().nextLevelName;
+
+        Debug.Log(nextLevelName);
+
         this.restartText.text = "Proxima Fase";
 
         GameObject playerObject = GameObject.FindWithTag("Player");
@@ -79,8 +93,11 @@ public class GameController : MonoBehaviour {
 
     public IEnumerator LoadAfterAnim(Animation animation)
     {
+        this.score = 0;
+        this.pointsForNextLevel = 40;
+        this.UpdateScore();        
         yield return new WaitForSeconds(animation["winlevel"].clip.length);
-        Application.LoadLevelAsync(nextLevelName);
+        Application.LoadLevelAsync(this.nextLevelName);
     }
 
 

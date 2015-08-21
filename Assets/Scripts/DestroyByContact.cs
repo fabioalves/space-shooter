@@ -11,6 +11,12 @@ public class DestroyByContact : MonoBehaviour {
     void Start()
     {
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+
+        if (gameControllerObject == null)
+        {
+            Debug.Log("Não encontrado o script gameControllerObject");
+        }
+
         if (gameControllerObject != null)
         {
             this.gameController = gameControllerObject.GetComponent<GameController>();
@@ -32,6 +38,10 @@ public class DestroyByContact : MonoBehaviour {
 
             if (other.tag.Equals("Bolt"))
             {
+                if (this.gameController == null)
+                {
+                    Debug.Log("Não encontrado o script GameController");
+                }
                 this.gameController.AddScore(scoreValue);
             }
             if (other.tag.Equals("Player"))
