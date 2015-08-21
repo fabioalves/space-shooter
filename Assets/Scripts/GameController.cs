@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour {
     private bool gameOver;
     private bool restart;
     private bool showAnimation = true;
+    private Rigidbody playerRigidbody;
 
     void Awake()
     {
@@ -27,6 +28,7 @@ public class GameController : MonoBehaviour {
         DontDestroyOnLoad(this.scoreText);
         DontDestroyOnLoad(this.restartText);
         DontDestroyOnLoad(this.gameOverText);
+        DontDestroyOnLoad(this.playerRigidbody);
     }
 
     void Start()
@@ -35,7 +37,6 @@ public class GameController : MonoBehaviour {
         this.restartText = GameObject.Find("Restart Text").GetComponent<GUIText>();
         this.gameOverText = GameObject.Find("Game Over Text").GetComponent<GUIText>();
 
-        
         
 
         StartCoroutine(SpawnWaves());
@@ -53,11 +54,15 @@ public class GameController : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
+                this.score = 0;
+                this.UpdateScore();
+                this.restartText.text = "";
+                this.gameOver = false;
+                this.gameOverText.text = "";
                 Application.LoadLevel(Application.loadedLevel);
-                Debug.Log("Level: "+Application.loadedLevelName);
+                StartCoroutine(this.SpawnWaves());
             }            
         }
-        Debug.Log("Level:" + Application.loadedLevelName);
         if (this.GetScore() >= pointsForNextLevel)
         {
             LoadNewScene();
@@ -72,33 +77,39 @@ public class GameController : MonoBehaviour {
         this.restartText.text = "Proxima Fase";
 
         GameObject playerObject = GameObject.FindWithTag("Player");
-        Rigidbody rigid = playerObject.GetComponent<Rigidbody>();
-        
-        Debug.Log(rigid.isKinematic);
+        this.playerRigidbody = playerObject.GetComponent<Rigidbody>();
 
         Transform playerTransform = playerObject.transform;
         playerTransform.position.Set(0, 3.0f, 0);
 
         playerObject.transform.parent = playerTransform;
-
-        Debug.Log("Position:"+playerObject.transform.position.y);
-        rigid.isKinematic = true;
+        
+        this.playerRigidbody.isKinematic = true;
 
         Animation winLevelAnimation = playerObject.GetComponent<Animation>();
         winLevelAnimation.Play("winlevel", PlayMode.StopAll);
 
-        StartCoroutine(LoadAfterAnim(winLevelAnimation));
-        
+
+        if (!Application.isLoadingLevel)
+        {
+            this.score = 0;
+            StartCoroutine(LoadAfterAnim(winLevelAnimation["winlevel"].clip.length));           
+            
+        }
     }
 
-    public IEnumerator LoadAfterAnim(Animation animation)
+    public IEnumerator LoadAfterAnim(float animationSeconds)
     {
-        this.score = 0;
-        this.pointsForNextLevel = 40;
-        this.UpdateScore();        
-        yield return new WaitForSeconds(animation["winlevel"].clip.length);
+        
+        yield return new WaitForSeconds(2.4f);
+        
+        this.UpdateScore();
+        this.restartText.text = "";
+
         Application.LoadLevelAsync(this.nextLevelName);
+          
     }
+    
 
 
     IEnumerator SpawnWaves()
