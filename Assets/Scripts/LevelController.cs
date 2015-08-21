@@ -2,62 +2,63 @@
 using System.Collections;
 
 public class LevelController : MonoBehaviour {
-    private GameController gameController;
-    private bool loadLevel = false;
-    public string nextLevelName;
-    public int nextLevelNeededPoints;
+    //private GameController gameController;
+    //private GameObject playerObject;
+    //private PlayerController pController;
+    //private bool loadLevel = false;
+    //private Animation winLevelAnimation;
 
-    public Animation winLevelAnimation;
+    //public string nextLevelName;
+    //public int pointsForNextLevel;    
 
-    void Start()
-    {
-        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
-        if (gameControllerObject != null)
-        {
-            this.gameController = gameControllerObject.GetComponent<GameController>();
-        }
+    //void Start()
+    //{
+    //    GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+    //    if (gameControllerObject != null)
+    //    {
+    //        this.gameController = gameControllerObject.GetComponent<GameController>();
+    //    }
 
-        if (this.gameController == null)
-        {
-            Debug.Log("Não encontrado o script GameController");
-        }
-        
-    }
+    //    if (this.gameController == null)
+    //    {
+    //        Debug.Log("Não encontrado o script GameController");
+    //    }
+    //}
 
+    //void Update()
+    //{
+    //    if (this.gameController == null)
+    //    {
+    //        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+    //        this.gameController = gameControllerObject.GetComponent<GameController>();
+    //    }
 
-    void Update()
-    {
-        if (this.gameController.GetScore() >= nextLevelNeededPoints)
-        {
-            StartCoroutine(LoadNewScene());
-        }
-        if(loadLevel == true)
-        {
-            Application.LoadLevel(nextLevelName);
-        }
+    //    if (this.gameController.GetScore() >= pointsForNextLevel)
+    //    {
+    //        this.playerObject = GameObject.FindWithTag("Player");
+    //        Debug.Log(playerObject);
+    //        this.pController = playerObject.GetComponent<PlayerController>();
+    //        this.LoadNewScene(playerObject, pController);
+    //    }            
+    //}
 
-        if (Input.GetKeyDown(KeyCode.U)) {
-            Debug.Log("Animação");
-            
-        }
+    //void LoadNewScene(GameObject player, PlayerController controller)
+    //{        
+    //    this.gameController.restartText.text = "Proxima Fase";
 
-    }
+    //    controller.YPosition(3.0f);
 
-    IEnumerator LoadNewScene()
-    {
-        this.gameController.restartText.text = "Proxima Fase";
+    //    Debug.Log("Não encontrado: "+ controller.YPosition());
 
-        GameObject playerObject = GameObject.FindWithTag("Player");
-        PlayerController pcontroller = playerObject.GetComponent<PlayerController>();
-        pcontroller.YPosition(3.0f);
-        winLevelAnimation = playerObject.GetComponent<Animation>();
-        winLevelAnimation.Play("winlevel", PlayMode.StopAll);
+    //    winLevelAnimation = player.GetComponent<Animation>();
+    //    winLevelAnimation.Play("winlevel", PlayMode.StopAll);
 
-        
-        yield return new WaitForSeconds(2);
-
-        this.loadLevel = true;
-    }
+    //    if (!this.winLevelAnimation.isPlaying)
+    //    {
+    //        Debug.Log("Terminado");
+    //        Application.LoadLevel(nextLevelName);
+    //    }
+    //}
 
 
 }

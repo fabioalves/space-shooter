@@ -13,12 +13,14 @@ public class GameController : MonoBehaviour {
     public GUIText scoreText;
     public GUIText restartText;
     public GUIText gameOverText;
+    public int pointsForNextLevel;
+    public string nextLevelName;
     
-
     private int score;
     private bool gameOver;
-    private bool restart;   
-    
+    private bool restart;
+    private bool showAnimation = true;
+
 
     void Start()
     {
@@ -30,6 +32,7 @@ public class GameController : MonoBehaviour {
         this.restart = false;
         this.restartText.text = "";
         this.gameOverText.text = "";
+        
     }
 
     void Update()
@@ -42,7 +45,44 @@ public class GameController : MonoBehaviour {
                 Debug.Log("Level: "+Application.loadedLevelName);
             }            
         }
+
+        if (this.GetScore() >= pointsForNextLevel && showAnimation == true)
+        {
+            LoadNewScene();
+            showAnimation = false;            
+        }
+
     }
+
+    void LoadNewScene() {
+        this.restartText.text = "Proxima Fase";
+
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        Rigidbody rigid = playerObject.GetComponent<Rigidbody>();
+        
+        Debug.Log(rigid.isKinematic);
+
+        Transform playerTransform = playerObject.transform;
+        playerTransform.position.Set(0, 3.0f, 0);
+
+        playerObject.transform.parent = playerTransform;
+
+        Debug.Log("Position:"+playerObject.transform.position.y);
+        rigid.isKinematic = true;
+
+        Animation winLevelAnimation = playerObject.GetComponent<Animation>();
+        winLevelAnimation.Play("winlevel", PlayMode.StopAll);
+
+        StartCoroutine(LoadAfterAnim(winLevelAnimation));
+        
+    }
+
+    public IEnumerator LoadAfterAnim(Animation animation)
+    {
+        yield return new WaitForSeconds(animation["winlevel"].clip.length);
+        Application.LoadLevelAsync(nextLevelName);
+    }
+
 
     IEnumerator SpawnWaves()
     {

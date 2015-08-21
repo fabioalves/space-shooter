@@ -3,23 +3,23 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
-    public Boundary boundary;
-    public float tilt;
-    public float frontTilt;
+    public float speed = 8;
+    public Boundary boundary = new Boundary()
+    {
+        xMin = -7.7f,
+        xMax = 7.7f,
+        zMin = -4,
+        zMax = 8
+    };
+    public float tilt = 4;
+    public float frontTilt = 2;
 
     public GameObject shot;
     public Transform shotSpawn;
     public float fireRate = 0.5f;
     private float nextFire = 0.0f;
     private AudioSource audioSource;
-
-    private float yPosition = 0.0f;
-
-    public void YPosition(float position)
-    {
-        this.yPosition = position;
-    }
+       
 
     Rigidbody rbody;
     void Start()
@@ -44,18 +44,19 @@ public class PlayerController : MonoBehaviour
         
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(moveHorizontal, yPosition, moveVertical);
+        Vector3 movement = new Vector3(moveHorizontal, rbody.position.y, moveVertical);
         rbody.velocity = movement * speed;
 
         rbody.position = new Vector3(
             Mathf.Clamp(rbody.position.x, boundary.xMin, boundary.xMax),
-            yPosition,
+            rbody.position.y,
             Mathf.Clamp(rbody.position.z, boundary.zMin, boundary.zMax)
             );
 
-        rbody.rotation = Quaternion.Euler(rbody.velocity.z * frontTilt, yPosition, rbody.velocity.x * -tilt);
+        rbody.rotation = Quaternion.Euler(rbody.velocity.z * frontTilt, rbody.position.y, rbody.velocity.x * -tilt);
         
     }
+
 }
 
 [System.Serializable]
